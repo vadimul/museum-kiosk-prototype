@@ -2,7 +2,7 @@
 <html lang="be">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1080, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ЭХА ВОЛЬНАСЦІ — Нацыянальны гістарычны музей Беларусі</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,15 +40,15 @@
   --font-body: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
   --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
 
-  /* Type Scale (portrait kiosk) */
-  --text-xs: 14px;
-  --text-sm: 16px;
-  --text-base: 18px;
-  --text-lg: 22px;
-  --text-xl: 28px;
-  --text-2xl: 36px;
-  --text-3xl: 48px;
-  --text-hero: 72px;
+  /* Type Scale — fluid (clamp: min, preferred, max) */
+  --text-xs: clamp(12px, 1.1vw, 14px);
+  --text-sm: clamp(13px, 1.2vw, 16px);
+  --text-base: clamp(15px, 1.5vw, 18px);
+  --text-lg: clamp(18px, 2vw, 22px);
+  --text-xl: clamp(20px, 2.5vw, 28px);
+  --text-2xl: clamp(22px, 3vw, 36px);
+  --text-3xl: clamp(28px, 4vw, 48px);
+  --text-hero: clamp(36px, 6vw, 72px);
 
   /* Spacing */
   --space-1: 4px;
@@ -94,12 +94,14 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* overflow:hidden only on kiosk-sized viewports — mobile needs scroll */
   overflow: hidden;
 }
 
 body {
-  width: 1080px;
-  height: 1920px;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   font-family: var(--font-body);
   font-size: var(--text-base);
   color: var(--text);
@@ -1306,6 +1308,361 @@ p { max-width: 72ch; }
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ============================================================
+   MOBILE SIDEBAR TOGGLE BUTTON (hidden on desktop/kiosk)
+   ============================================================ */
+.mobile-menu-btn {
+  display: none;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  color: var(--gold);
+  background: var(--gold-dim);
+  flex-shrink: 0;
+  margin-left: auto;
+  transition: background var(--transition-fast);
+}
+.mobile-menu-btn:active {
+  background: rgba(201,166,118,0.25);
+}
+
+/* Sidebar overlay (mobile) */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 99;
+}
+.sidebar-overlay.active {
+  display: block;
+}
+
+/* ============================================================
+   TABLET BREAKPOINT (max-width: 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 220px;
+    --header-height: 64px;
+  }
+
+  .uprising-cards {
+    max-width: 100%;
+  }
+
+  .content-two-col {
+    gap: var(--space-6);
+  }
+
+  .portrait-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .artifact-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .menu-map-area {
+    padding: var(--space-6);
+  }
+}
+
+/* ============================================================
+   MOBILE BREAKPOINT (max-width: 768px)
+   ============================================================ */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 280px;
+    --footer-height: 56px;
+    --header-height: 60px;
+  }
+
+  /* Allow scrolling on mobile */
+  html, body {
+    overflow: auto;
+    overflow-x: hidden;
+  }
+
+  /* Body becomes a normal flow document on mobile */
+  body {
+    position: static;
+  }
+
+  /* Screens stack vertically; active one is shown */
+  .screen {
+    position: fixed;
+    inset: 0;
+  }
+
+  /* Screensaver */
+  .screensaver-title {
+    font-size: clamp(36px, 10vw, 60px);
+    letter-spacing: 3px;
+  }
+
+  .museum-logo-large {
+    width: 120px;
+    height: 120px;
+    margin-bottom: var(--space-4);
+  }
+
+  .screensaver-content {
+    gap: var(--space-5);
+    padding: 0 var(--space-6);
+  }
+
+  .ornament-corner {
+    width: 40px;
+    height: 40px;
+  }
+  .ornament-corner.tl, .ornament-corner.tr,
+  .ornament-corner.bl, .ornament-corner.br {
+    margin: 20px !important;
+  }
+
+  /* Main menu */
+  .menu-header {
+    padding: var(--space-4) var(--space-5);
+    gap: var(--space-4);
+  }
+
+  .menu-header-text h2 {
+    font-size: var(--text-lg);
+  }
+
+  .museum-logo-sm {
+    width: 40px;
+    height: 40px;
+  }
+
+  .menu-map-area {
+    padding: var(--space-5);
+  }
+
+  .menu-title-block {
+    margin-bottom: var(--space-8);
+  }
+
+  .menu-title-block h1 {
+    letter-spacing: 1px;
+  }
+
+  .uprising-cards {
+    max-width: 100%;
+    gap: var(--space-5);
+  }
+
+  .uprising-card {
+    padding: var(--space-6);
+    min-height: 120px;
+    gap: var(--space-5);
+  }
+
+  .uprising-card-year {
+    font-size: clamp(32px, 8vw, 52px);
+  }
+
+  .uprising-card-text h3 {
+    font-size: var(--text-xl);
+  }
+
+  /* Content screen layout */
+  .content-screen {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .content-header {
+    padding: 0 var(--space-4);
+    gap: var(--space-3);
+  }
+
+  .back-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .back-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Show hamburger button on mobile */
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  /* Sidebar: hidden by default, slides in as drawer */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: var(--sidebar-width);
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 300ms var(--ease-out);
+    padding-top: calc(var(--space-16) + var(--space-4));
+    /* already has background: var(--bg-deep) and border-right */
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  /* Content body takes full width when sidebar is hidden */
+  .content-body {
+    overflow: hidden;
+  }
+
+  .content-main {
+    padding: var(--space-5);
+  }
+
+  /* Grids: go single column or 2-col on mobile */
+  .content-two-col {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  .portrait-gallery {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  .artifact-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+  }
+
+  /* Newspaper: single column */
+  .newspaper-body {
+    columns: 1;
+    column-gap: 0;
+    column-rule: none;
+  }
+
+  /* Timeline: reduce left padding */
+  .timeline {
+    padding-left: var(--space-8);
+  }
+
+  .timeline::before {
+    left: 12px;
+  }
+
+  .timeline-dot {
+    left: -28px;
+  }
+
+  /* Sections */
+  .section-title {
+    font-size: var(--text-xl);
+  }
+
+  .quote-block {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .quote-text {
+    font-size: var(--text-base);
+  }
+
+  /* Footer */
+  .footer-bar {
+    padding: 0 var(--space-4);
+  }
+
+  .lang-btn {
+    width: 40px;
+    height: 34px;
+    font-size: 13px;
+  }
+
+  .footer-icon-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .footer-right {
+    gap: var(--space-2);
+  }
+
+  /* Map tooltips: cap width */
+  .map-tooltip {
+    max-width: min(260px, 80vw);
+  }
+
+  /* Flowchart children: reduce indent */
+  .flow-children {
+    padding-left: var(--space-4);
+  }
+
+  /* Artifact icon: smaller on mobile */
+  .artifact-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  /* Stat number: scaled down */
+  .stat-number {
+    font-size: var(--text-2xl);
+  }
+}
+
+/* ============================================================
+   SMALL MOBILE (max-width: 430px)
+   ============================================================ */
+@media (max-width: 430px) {
+  .portrait-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .artifact-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .uprising-card {
+    padding: var(--space-5);
+    min-height: 100px;
+  }
+
+  .uprising-card-year {
+    font-size: clamp(28px, 7vw, 44px);
+  }
+
+  .footer-right .footer-icon-btn {
+    display: none;
+  }
+}
+
+/* ============================================================
+   LARGE DESKTOP / KIOSK LANDSCAPE (min-width: 1200px)
+   ============================================================ */
+@media (min-width: 1200px) and (orientation: landscape) {
+  /* On large desktops center the menu content */
+  .uprising-cards {
+    max-width: 800px;
+  }
+
+  .menu-map-area {
+    padding: var(--space-10);
+  }
+}
 </style>
 </head>
 <body>
@@ -1484,9 +1841,14 @@ p { max-width: 72ch; }
         <h2 data-i18n="header1830_title">Паўстанне 1830–1831 гг.</h2>
         <p data-i18n="header1830_subtitle">«За нашу і вашу свабоду!»</p>
       </div>
+      <button class="mobile-menu-btn" aria-label="Меню" onclick="toggleMobileSidebar('sidebar-1830', 'overlay-1830')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
     </div>
 
     <div class="content-body">
+      <!-- Mobile sidebar overlay -->
+      <div class="sidebar-overlay" id="overlay-1830" onclick="closeMobileSidebar('sidebar-1830', 'overlay-1830')"></div>
       <!-- Sidebar -->
       <div class="sidebar" id="sidebar-1830">
         <div class="sidebar-item active" data-panel="1830-context">
@@ -2022,9 +2384,14 @@ p { max-width: 72ch; }
         <h2 data-i18n="header1863_title">Паўстанне 1863–1864 гг.</h2>
         <p data-i18n="header1863_subtitle">«Мужыцкая праўда» Кастуся Каліноўскага</p>
       </div>
+      <button class="mobile-menu-btn" aria-label="Меню" onclick="toggleMobileSidebar('sidebar-1863', 'overlay-1863')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
     </div>
 
     <div class="content-body">
+      <!-- Mobile sidebar overlay -->
+      <div class="sidebar-overlay" id="overlay-1863" onclick="closeMobileSidebar('sidebar-1863', 'overlay-1863')"></div>
       <!-- Sidebar -->
       <div class="sidebar" id="sidebar-1863">
         <div class="sidebar-item active" data-panel="1863-prerequisites">
@@ -2442,6 +2809,9 @@ function navigateTo(screenId) {
   screenHistory.push(screenId);
   currentScreen = screenId;
 
+  // Close any open mobile sidebars
+  closeAllMobileSidebars();
+
   // Animate content sections in
   setTimeout(() => {
     animateContentIn(screenId);
@@ -2454,6 +2824,36 @@ function goBack() {
     const prev = screenHistory[screenHistory.length - 1];
     navigateTo(prev);
   }
+}
+
+// ============================================================
+// MOBILE SIDEBAR TOGGLE
+// ============================================================
+function toggleMobileSidebar(sidebarId, overlayId) {
+  const sidebar = document.getElementById(sidebarId);
+  const overlay = document.getElementById(overlayId);
+  if (!sidebar || !overlay) return;
+  const isOpen = sidebar.classList.contains('mobile-open');
+  if (isOpen) {
+    sidebar.classList.remove('mobile-open');
+    overlay.classList.remove('active');
+  } else {
+    sidebar.classList.add('mobile-open');
+    overlay.classList.add('active');
+  }
+}
+
+function closeMobileSidebar(sidebarId, overlayId) {
+  const sidebar = document.getElementById(sidebarId);
+  const overlay = document.getElementById(overlayId);
+  if (sidebar) sidebar.classList.remove('mobile-open');
+  if (overlay) overlay.classList.remove('active');
+}
+
+// Close all mobile sidebars (called on screen transitions)
+function closeAllMobileSidebars() {
+  document.querySelectorAll('.sidebar').forEach(s => s.classList.remove('mobile-open'));
+  document.querySelectorAll('.sidebar-overlay').forEach(o => o.classList.remove('active'));
 }
 
 // ============================================================
@@ -2483,6 +2883,12 @@ document.querySelectorAll('.sidebar-item').forEach(item => {
         inner.offsetHeight; // reflow
         inner.style.animation = 'fadeSlideIn 400ms var(--ease-out) forwards';
       }
+    }
+
+    // On mobile: close the sidebar drawer after selection
+    if (window.innerWidth <= 768) {
+      const overlayId = sidebar.id === 'sidebar-1830' ? 'overlay-1830' : 'overlay-1863';
+      closeMobileSidebar(sidebar.id, overlayId);
     }
   });
 });
@@ -2662,8 +3068,8 @@ let particles = [];
 let animationId;
 
 function initParticles() {
-  canvas.width = 1080;
-  canvas.height = 1920;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
   particles = [];
 
   for (let i = 0; i < 80; i++) {
@@ -2840,6 +3246,17 @@ window.addEventListener('DOMContentLoaded', () => {
   initParticles();
   drawParticles();
   initScreensaver();
+});
+
+// Resize particle canvas when viewport changes
+window.addEventListener('resize', () => {
+  if (currentScreen === 'screensaver') {
+    initParticles();
+  } else {
+    // Just resize canvas for next time screensaver is shown
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
 });
 
 // Close tooltips on outside click
